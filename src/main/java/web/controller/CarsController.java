@@ -8,9 +8,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import web.model.Car;
 
 import java.util.List;
+import web.service.CarService;
+import web.service.CarServiceImpl;
 
 @Controller
 public class CarsController {
+    private final CarService carService = new CarServiceImpl();
 
     private List<Car> carList = List.of(
             new Car(1L, "Model A", 1),
@@ -23,15 +26,8 @@ public class CarsController {
 
     @GetMapping("/cars")
     public String listCars(@RequestParam(value = "c", required = false, defaultValue = "0") int count, Model model) {
-        List<Car> cars;
-
-        if (count > 0 && count < carList.size()) {
-            cars = carList.subList(0, count);
-        } else {
-            cars = carList;
-        }
-        model.addAttribute("cars", cars);
-
+        List<Car> cars = carList;
+        model.addAttribute("cars", carService.getListOfCar(count, cars));
         return "cars";
     }
 }

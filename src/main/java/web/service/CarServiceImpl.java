@@ -9,6 +9,10 @@ public class CarServiceImpl implements CarService{
 
     @Override
     public List<Car> getListOfCar(int count, List<Car> cars) {
-        return cars.subList(0, count);
+        if (count > 0 && count <= cars.size()) {
+            return cars.subList(0, count);
+        } else {
+            return cars;
+        }
     }
 }
