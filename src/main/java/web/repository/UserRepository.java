@@ -3,6 +3,7 @@ package web.repository;
 import web.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository {
     List<User> getAllUsers();
@@ -13,5 +14,5 @@ public interface UserRepository {
 
     User readUser(long id);
 
-    User deleteUser(long id);
+    void deleteUser(long id);
 }

@@ -1,20 +1,70 @@
 package web.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import web.model.User;
+import web.service.UserService;
 
-import java.time.LocalTime;
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class HelloController {
 
-	@GetMapping("/hello")
-	public String hello (Model model) {
-		model.addAttribute("msg", "A message from the controller");
-		model.addAttribute("time", LocalTime.now());
-		return "index";
+
+	private final UserService userService;
+
+	@Autowired
+    public HelloController(UserService userService) {
+        this.userService = userService;
+    }
+
+
+	@GetMapping(value = "/")
+	public String getAllUsers(Model model) {
+		List<User> users = userService.getAllUsers();
+		model.addAttribute("users", users);
+		return "users";
 	}
-	
+
+	@GetMapping(value = "/new")
+	public String createUserForm(Model model) {
+		model.addAttribute("user", new User());
+		return "addUser";
+	}
+
+	@PostMapping
+	public String createUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			return "addUser";
+		}
+		userService.createUser(user);
+		return "redirect:/";
+	}
+
+	@PostMapping("/delete")
+	public String deleteUser(@RequestParam("id") long id) {
+		userService.deleteUser(id);
+		return "redirect:/";
+	}
+
+	@GetMapping(value = "/edit")
+	public String editUserForm(@RequestParam long id, Model model) {
+		User user = userService.readUser(id);
+		model.addAttribute("user", user);
+		return "editUser";
+    }
+
+	@PostMapping("/edit")
+	public String editUser(@ModelAttribute("user") @Valid User user, @RequestParam long id) {
+		user.setId(id);
+		userService.updateUser(user);
+		return "redirect:/";
+	}
+
+
 }

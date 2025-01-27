@@ -4,10 +4,11 @@ import javax.persistence.*;
 import org.springframework.stereotype.Controller;
 
 @Entity
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
     private String username;
     private String password;
     private String email;
@@ -21,11 +22,11 @@ public class User {
     public User() {
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

@@ -1,46 +1,51 @@
 package web.repository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import web.model.User;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Optional;
 
+@Repository
 public class UserRepositoryImpl implements UserRepository {
 
     @PersistenceContext
     private EntityManager em;
 
     @Override
+    @Transactional
     public List<User> getAllUsers() {
         return em.createQuery("from User", User.class).getResultList();
     }
 
     @Override
+    @Transactional
     public void createUser(User user) {
         em.persist(user);
-        em.flush();
     }
 
     @Override
+    @Transactional
     public void updateUser(User user) {
         em.merge(user);
-        em.flush();
     }
 
     @Override
+    @Transactional
     public User readUser(long id) {
         return em.find(User.class, id);
     }
 
     @Override
-    public User deleteUser(long id) {
+    @Transactional
+    public void deleteUser(long id) {
         User user = readUser(id);
-        if (null == user) {
-            throw new NullPointerException("User not found");
+        if (user != null) {
+            em.remove(user);
         }
-        em.remove(user);
-        em.flush();
-        return user;
     }
 }
