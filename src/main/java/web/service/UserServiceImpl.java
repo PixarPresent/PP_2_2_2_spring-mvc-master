@@ -1,13 +1,19 @@
 package web.service;
 
+import org.springframework.stereotype.Service;
 import web.model.User;
 import web.repository.UserRepository;
-import web.repository.UserRepositoryImpl;
 
 import java.util.List;
+import java.util.Optional;
 
+@Service
 public class UserServiceImpl implements UserService {
-    UserRepository userRepository = new UserRepositoryImpl();
+    private final UserRepository userRepository;
+
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public List<User> getAllUsers() {
@@ -30,7 +36,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User deleteUser(long id) {
-        return userRepository.deleteUser(id);
+    public void deleteUser(long id) {
+        userRepository.deleteUser(id);
     }
 }
