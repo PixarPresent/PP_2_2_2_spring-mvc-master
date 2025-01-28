@@ -10,16 +10,15 @@ import web.service.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
-public class HelloController {
+public class UsersController {
 
 
 	private final UserService userService;
 
 	@Autowired
-    public HelloController(UserService userService) {
+    public UsersController(UserService userService) {
         this.userService = userService;
     }
 
